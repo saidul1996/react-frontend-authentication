@@ -1,9 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 function App() {
   return (
-    <div className="bg-slate-500">
-      <nav className="bg-white border-black-200 dark:bg-gray-900 border-b-indigo-500">
+    <div className="">
+      <nav className="bg-white border-black-200 dark:bg-gray-900 border-b-2 border-indigo-500">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <Link 
             to="/"
@@ -48,6 +51,13 @@ function App() {
           </div>
         </div>
       </nav>
+      <div className="max-w-7xl mx-auto mt-6">
+        <Routes>
+          <Route path="/" element={<Home />}/>
+          <Route path="/login" element={<Login />}/>
+          <Route path="/register" element={<Register />}/>
+        </Routes>
+      </div>
     </div>
   )
 }

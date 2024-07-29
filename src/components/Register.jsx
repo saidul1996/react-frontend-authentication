@@ -7,10 +7,14 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [password_confirmation, setPasswordConfirmation] = useState("");
+    const [errors, setErrors] = useState([]);
     const navigate = useNavigate();
+
+    const csrf = () => axios.get('/sanctum/csrf-cookie');
 
     const handleRegister = async (event) => {
         event.preventDefault();
+        await csrf();
         try {
             await axios.post('/register', {name, email, password, password_confirmation})
             setName("");
@@ -19,7 +23,9 @@ const Register = () => {
             setPasswordConfirmation("");
             navigate("/")
         } catch (error) {
-            console.log(error);
+            if(error.response.status === 422){
+                setErrors(error.response.data.errors);
+            }
         }
     }
     return (
@@ -44,6 +50,9 @@ const Register = () => {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 type="text" name="name" id="name" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="John Due" required="" />
+                                {errors.name && <div className="flex">
+                                    <span className="text-red-400 text-sm m-2 p-2">{errors.name[0]}</span>
+                                </div>}
                             </div>
                             <div>
                                 <label for="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
@@ -51,6 +60,9 @@ const Register = () => {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 type="email" name="email" id="email" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="name@example.com" required="" />
+                                {errors.email && <div className="flex">
+                                    <span className="text-red-400 text-sm m-2 p-2">{errors.email[0]}</span>
+                                </div>}
                             </div>
                             <div>
                                 <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
@@ -58,6 +70,9 @@ const Register = () => {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required="" />
+                                {errors.password && <div className="flex">
+                                    <span className="text-red-400 text-sm m-2 p-2">{errors.password[0]}</span>
+                                </div>}
                             </div>
                             <div>
                                 <label for="password-confirmation" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password Confirmation</label>
